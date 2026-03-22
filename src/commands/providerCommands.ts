@@ -26,8 +26,11 @@ export function registerProviderCommands(program: Command): void {
         const status = provider.enabled ? chalk.green('✓') : chalk.gray('○');
         const name = chalk.cyan(provider.name);
         const type = chalk.gray(`(${provider.type})`);
-        console.log(`  ${index + 1}. ${status} ${name} ${type}`);
+        const id = chalk.gray(`[${provider.id.substring(0, 8)}...]`);
+        console.log(`  ${index + 1}. ${status} ${name} ${type} ${id}`);
       });
+      console.log(chalk.gray('\nUsage: cc-switch provider switch <number|name|id>'));
+      console.log(chalk.gray('Example: cc-switch provider switch 1 or cc-switch provider switch claude'));
       console.log('');
     });
 
@@ -109,9 +112,10 @@ export function registerProviderCommands(program: Command): void {
           // 输入的是序号
           providerId = providers[num - 1].id;
         } else {
-          // 尝试匹配 ID 或名称
+          // 尝试匹配 ID（完整或前缀）或名称
           const provider = providers.find(p =>
             p.id === input ||
+            p.id.startsWith(input) ||
             p.name.toLowerCase() === input.toLowerCase() ||
             p.name.toLowerCase().includes(input.toLowerCase())
           );
@@ -176,9 +180,10 @@ export function registerProviderCommands(program: Command): void {
           // 输入的是序号
           providerId = providers[num - 1].id;
         } else {
-          // 尝试匹配 ID 或名称
+          // 尝试匹配 ID（完整或前缀）或名称
           const provider = providers.find(p =>
             p.id === input ||
+            p.id.startsWith(input) ||
             p.name.toLowerCase() === input.toLowerCase() ||
             p.name.toLowerCase().includes(input.toLowerCase())
           );

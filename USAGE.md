@@ -2,7 +2,7 @@
 
 ## 切换提供商
 
-现在支持三种方式切换提供商：
+现在支持四种方式切换提供商：
 
 ### 1. 通过序号切换（推荐）
 ```bash
@@ -23,10 +23,17 @@ cc-switch provider switch claude
 cc-switch provider switch xiaomi
 ```
 
-### 3. 通过 ID 切换
+### 3. 通过 ID 前缀切换（推荐）
+```bash
+# 使用显示的 ID 前缀（前 8 个字符）
+cc-switch provider switch bd065723
+cc-switch provider switch 6df92add
+```
+
+### 4. 通过完整 ID 切换
 ```bash
 # 通过完整 UUID
-cc-switch provider switch 6df92add-e90c-452b-beed-a5550ae9d407
+cc-switch provider switch bd065723-4e5f-4a8b-9c1d-1234567890ab
 ```
 
 ### 4. 交互式选择
