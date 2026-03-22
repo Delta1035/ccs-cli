@@ -26,21 +26,49 @@ export class ProviderService {
   // 获取所有提供商
   static getAllProviders(): Provider[] {
     const providers = db.getProviders();
-    return providers.map(row => ({
-      id: row.id,
-      name: row.name,
-      type: row.type,
-      baseUrl: row.baseUrl || row.config?.apiEndpoint || '',
-      apiKey: row.apiKey || row.config?.apiKey || '',
-      models: row.models || { claude: row.config?.model, codex: row.config?.model, gemini: row.config?.model },
-      websiteUrl: row.websiteUrl,
-      icon: row.icon,
-      iconColor: row.iconColor,
-      enabled: row.enabled,
-      order: row.order,
-      createdAt: typeof row.createdAt === 'number' ? new Date(row.createdAt) : new Date(row.createdAt),
-      updatedAt: typeof row.updatedAt === 'number' ? new Date(row.updatedAt) : new Date(row.updatedAt)
-    }));
+    return providers.map(row => {
+      // 处理旧的 config 对象结构和新的字段结构
+      let models: { claude?: string; codex?: string; gemini?: string };
+
+      if (row.models) {
+        // 新的结构：models 对象
+        models = row.models;
+      } else if (row.config?.model) {
+        // 旧的结构：config.model 是字符串，需要根据类型映射
+        const model = row.config.model;
+        switch (row.type) {
+          case 'claude':
+            models = { claude: model };
+            break;
+          case 'codex':
+            models = { codex: model };
+            break;
+          case 'gemini':
+            models = { gemini: model };
+            break;
+          default:
+            models = { claude: model, codex: model, gemini: model };
+        }
+      } else {
+        models = {};
+      }
+
+      return {
+        id: row.id,
+        name: row.name,
+        type: row.type,
+        baseUrl: row.baseUrl || row.config?.apiEndpoint || '',
+        apiKey: row.apiKey || row.config?.apiKey || '',
+        models: models,
+        websiteUrl: row.websiteUrl,
+        icon: row.icon,
+        iconColor: row.iconColor,
+        enabled: row.enabled,
+        order: row.order,
+        createdAt: typeof row.createdAt === 'number' ? new Date(row.createdAt) : new Date(row.createdAt),
+        updatedAt: typeof row.updatedAt === 'number' ? new Date(row.updatedAt) : new Date(row.updatedAt)
+      };
+    });
   }
 
   // 获取启用的提供商
@@ -48,13 +76,40 @@ export class ProviderService {
     const providers = db.getProviders();
     const provider = providers.find(p => p.enabled);
     if (!provider) return null;
+
+    // 处理旧的 config 对象结构和新的字段结构
+    let models: { claude?: string; codex?: string; gemini?: string };
+
+    if (provider.models) {
+      // 新的结构：models 对象
+      models = provider.models;
+    } else if (provider.config?.model) {
+      // 旧的结构：config.model 是字符串，需要根据类型映射
+      const model = provider.config.model;
+      switch (provider.type) {
+        case 'claude':
+          models = { claude: model };
+          break;
+        case 'codex':
+          models = { codex: model };
+          break;
+        case 'gemini':
+          models = { gemini: model };
+          break;
+        default:
+          models = { claude: model, codex: model, gemini: model };
+      }
+    } else {
+      models = {};
+    }
+
     return {
       id: provider.id,
       name: provider.name,
       type: provider.type,
       baseUrl: provider.baseUrl || provider.config?.apiEndpoint || '',
       apiKey: provider.apiKey || provider.config?.apiKey || '',
-      models: provider.models || { claude: provider.config?.model, codex: provider.config?.model, gemini: provider.config?.model },
+      models: models,
       websiteUrl: provider.websiteUrl,
       icon: provider.icon,
       iconColor: provider.iconColor,
@@ -167,13 +222,40 @@ export class ProviderService {
   static getProviderById(id: string): Provider | null {
     const provider = db.getProvider(id);
     if (!provider) return null;
+
+    // 处理旧的 config 对象结构和新的字段结构
+    let models: { claude?: string; codex?: string; gemini?: string };
+
+    if (provider.models) {
+      // 新的结构：models 对象
+      models = provider.models;
+    } else if (provider.config?.model) {
+      // 旧的结构：config.model 是字符串，需要根据类型映射
+      const model = provider.config.model;
+      switch (provider.type) {
+        case 'claude':
+          models = { claude: model };
+          break;
+        case 'codex':
+          models = { codex: model };
+          break;
+        case 'gemini':
+          models = { gemini: model };
+          break;
+        default:
+          models = { claude: model, codex: model, gemini: model };
+      }
+    } else {
+      models = {};
+    }
+
     return {
       id: provider.id,
       name: provider.name,
       type: provider.type,
       baseUrl: provider.baseUrl || provider.config?.apiEndpoint || '',
       apiKey: provider.apiKey || provider.config?.apiKey || '',
-      models: provider.models || { claude: provider.config?.model, codex: provider.config?.model, gemini: provider.config?.model },
+      models: models,
       websiteUrl: provider.websiteUrl,
       icon: provider.icon,
       iconColor: provider.iconColor,
@@ -204,7 +286,16 @@ export class ProviderService {
       fs.mkdirSync(configDir, { recursive: true });
     }
 
-    // 根据提供商类型写入不同的配置文件
+    // 清理所有旧的配置文件
+    const configFiles = ['claude-config.json', 'codex-config.json', 'gemini-config.json'];
+    configFiles.forEach(file => {
+      const filePath = path.join(configDir, file);
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+      }
+    });
+
+    // 根据提供商类型写入新的配置文件
     let configFile: string;
     let configContent: string;
 
