@@ -4,10 +4,10 @@
 
 ```bash
 # 通过 npm 全局安装
-npm install -g ccs-cli
+npm install -g @delta1035/ccs-cli
 
 # 或者使用 yarn
-yarn global add ccs-cli
+yarn global add @delta1035/ccs-cli
 ```
 
 ## 🚀 快速使用

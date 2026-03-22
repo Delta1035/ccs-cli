@@ -8,16 +8,16 @@
 
 ```json
 {
-  "name": "ccs-cli",           // 包名称（必须唯一）
+  "name": "@delta1035/ccs-cli",           // 包名称（必须唯一）
   "version": "1.0.0",          // 版本号
   "description": "...",        // 描述
   "author": {                  // 作者信息
     "name": "Your Name",
-    "email": "your.email@example.com"
+    "email": "528491526@qq.com"
   },
   "repository": {              // 仓库信息
     "type": "git",
-    "url": "https://github.com/your-username/ccs-cli.git"
+    "url": "https://github.com/delta1035/cc-switch-cli.git"
   }
 }
 ```
@@ -71,7 +71,7 @@ npm login
 #### 步骤 2: 检查包名是否可用
 
 ```bash
-npm search ccs-cli
+npm search @delta1035/ccs-cli
 ```
 
 如果包名已被占用，需要修改 `package.json` 中的 `name` 字段。
@@ -87,10 +87,10 @@ npm publish --access public
 
 ```bash
 # 检查包是否已发布
-npm view ccs-cli
+npm view @delta1035/ccs-cli
 
 # 测试安装
-npm install -g ccs-cli
+npm install -g @delta1035/ccs-cli
 ccs --help
 ```
 
@@ -161,7 +161,7 @@ A: 修改 `package.json` 中的 `name` 字段，例如：
 A: NPM 不支持完全删除包，但可以标记为废弃：
 
 ```bash
-npm deprecate ccs-cli@1.0.0 "This version is deprecated, please update to the latest version"
+npm deprecate @delta1035/ccs-cli@1.0.0 "This version is deprecated, please update to the latest version"
 ```
 
 ### Q: 如何发布到私有仓库？
@@ -174,8 +174,8 @@ npm publish --access restricted
 
 ## 📊 发布后检查
 
-1. ✅ 包页面: https://www.npmjs.com/package/ccs-cli
-2. ✅ 安装测试: `npm install -g ccs-cli`
+1. ✅ 包页面: https://www.npmjs.com/package/@delta1035/ccs-cli
+2. ✅ 安装测试: `npm install -g @delta1035/ccs-cli`
 3. ✅ 命令测试: `ccs --help`
 4. ✅ GitHub Release: 创建新的 Release
 

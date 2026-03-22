@@ -2,7 +2,7 @@
 
 🤖 AI CLI Tool Manager - Switch between Claude, Codex, Gemini, and more
 
-[![npm version](https://badge.fury.io/js/ccs-cli.svg)](https://badge.fury.io/js/ccs-cli)
+[![npm version](https://badge.fury.io/js/%40delta1035%2Fccs-cli.svg)](https://badge.fury.io/js/%40delta1035%2Fccs-cli)
 [![License: ISC](https://img.shields.io/badge/License-ISC-blue.svg)](https://opensource.org/licenses/ISC)
 
 ## ✨ Features
@@ -18,10 +18,10 @@
 
 ```bash
 # Install globally via npm
-npm install -g ccs-cli
+npm install -g @delta1035/ccs-cli
 
 # Or using yarn
-yarn global add ccs-cli
+yarn global add @delta1035/ccs-cli
 ```
 
 ## 📖 Usage
@@ -137,8 +137,8 @@ Configuration files are stored in `~/.cc-switch/`:
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/ccs-cli.git
-cd ccs-cli
+git clone https://github.com/delta1035/cc-switch-cli.git
+cd cc-switch-cli
 
 # Install dependencies
 npm install
@@ -165,7 +165,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## 📝 License
 
-ISC © [Your Name](https://github.com/your-username)
+ISC © [delta1035](https://github.com/delta1035)
 
 ## 🙏 Acknowledgments
 
