@@ -25,18 +25,18 @@
     "google"
   ],
   "author": {
-    "name": "Your Name",
+    "name": "Delta",
     "email": "528491526@qq.com"
   },
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "https://github.com/delta1035/cc-switch-cli.git"
+    "url": "https://github.com/Delta1035/ccs-cli.git"
   },
   "bugs": {
-    "url": "https://github.com/delta1035/cc-switch-cli/issues"
+    "url": "https://github.com/Delta1035/ccs-cli/issues"
   },
-  "homepage": "https://github.com/delta1035/cc-switch-cli#readme",
+  "homepage": "https://github.com/Delta1035/ccs-cli#readme",
   "dependencies": {
     "chalk": "^5.3.0",
     "commander": "^11.1.0",

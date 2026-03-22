@@ -137,7 +137,7 @@ Configuration files are stored in `~/.cc-switch/`:
 
 ```bash
 # Clone the repository
-git clone https://github.com/delta1035/cc-switch-cli.git
+git clone https://github.com/Delta1035/ccs-cli.git
 cd cc-switch-cli
 
 # Install dependencies

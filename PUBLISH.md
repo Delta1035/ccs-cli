@@ -17,7 +17,7 @@
   },
   "repository": {              // 仓库信息
     "type": "git",
-    "url": "https://github.com/delta1035/cc-switch-cli.git"
+    "url": "https://github.com/Delta1035/ccs-cli.git"
   }
 }
 ```
