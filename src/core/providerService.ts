@@ -358,5 +358,46 @@ export class ProviderService {
 
     console.log(`✅ 已切换到提供商: ${provider.name}`);
     console.log(`   配置文件: ${configFile}`);
+
+    // 如果是 Claude 提供商且系统是 Linux，同时写入到 ~/.claude/settings.json
+    if (provider.type === 'claude' && os.platform() === 'linux') {
+      const claudeSettingsDir = path.join(homeDir, '.claude');
+      const claudeSettingsFile = path.join(claudeSettingsDir, 'settings.json');
+
+      // 确保 .claude 目录存在
+      if (!fs.existsSync(claudeSettingsDir)) {
+        fs.mkdirSync(claudeSettingsDir, { recursive: true });
+      }
+
+      // 读取现有的 settings.json（如果存在）
+      let claudeSettings: any = { env: {} };
+      if (fs.existsSync(claudeSettingsFile)) {
+        try {
+          const content = fs.readFileSync(claudeSettingsFile, 'utf-8');
+          claudeSettings = JSON.parse(content);
+          if (!claudeSettings.env) {
+            claudeSettings.env = {};
+          }
+        } catch (error) {
+          console.warn(`警告: 无法读取现有配置文件 ${claudeSettingsFile}:`, error);
+        }
+      }
+
+      // 更新环境变量
+      claudeSettings.env.ANTHROPIC_AUTH_TOKEN = provider.apiKey;
+      claudeSettings.env.ANTHROPIC_BASE_URL = provider.baseUrl;
+      claudeSettings.env.ANTHROPIC_DEFAULT_HAIKU_MODEL = provider.models.claude || '';
+      claudeSettings.env.ANTHROPIC_DEFAULT_OPUS_MODEL = provider.models.claude || '';
+      claudeSettings.env.ANTHROPIC_DEFAULT_SONNET_MODEL = provider.models.claude || '';
+      claudeSettings.env.ANTHROPIC_MODEL = provider.models.claude || '';
+      claudeSettings.includeCoAuthoredBy = claudeSettings.includeCoAuthoredBy || false;
+
+      // 原子写入配置文件
+      const claudeTempFile = claudeSettingsFile + '.tmp';
+      fs.writeFileSync(claudeTempFile, JSON.stringify(claudeSettings, null, 2), 'utf-8');
+      fs.renameSync(claudeTempFile, claudeSettingsFile);
+
+      console.log(`   Claude 设置文件: ${claudeSettingsFile}`);
+    }
   }
 }
