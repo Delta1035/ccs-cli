@@ -1,171 +1,174 @@
-# CC Switch CLI
+# CCS CLI
 
-命令行版本的 CC Switch - AI CLI 工具管理器。
+🤖 AI CLI Tool Manager - Switch between Claude, Codex, Gemini, and more
 
-基于 [farion1231/cc-switch](https://github.com/farion1231/cc-switch) 项目创建，使用 Node.js + TypeScript 实现。
+[![npm version](https://badge.fury.io/js/ccs-cli.svg)](https://badge.fury.io/js/ccs-cli)
+[![License: ISC](https://img.shields.io/badge/License-ISC-blue.svg)](https://opensource.org/licenses/ISC)
 
-## 功能特性
+## ✨ Features
 
-- **多 AI 工具支持**: Claude Code, Codex, Gemini CLI, OpenCode, OpenClaw
-- **50+ 预设提供商**: AWS Bedrock, NVIDIA NIM, OpenRouter 等
-- **一键切换**: 快速切换不同 AI 提供商
-- **统一配置管理**: MCP, Prompts, Skills 统一管理
-- **使用量跟踪**: 统计 API 调用和成本
-- **会话管理**: 浏览和恢复对话历史
+- **Multi-Provider Support**: Manage Claude Code, Codex, Gemini CLI, OpenCode, OpenClaw
+- **One-Click Switching**: Instantly switch between different AI providers
+- **50+ Provider Presets**: AWS Bedrock, NVIDIA NIM, OpenRouter, and more
+- **Unified Configuration**: Manage MCP, Prompts, and Skills across all apps
+- **Usage Tracking**: Monitor API calls and costs
+- **Session Management**: Browse and restore conversation history
 
-## 安装
+## 🚀 Installation
 
 ```bash
-# 克隆项目
-git clone <repository-url>
-cd cc-switch-cli
+# Install globally via npm
+npm install -g ccs-cli
 
-# 安装依赖
+# Or using yarn
+yarn global add ccs-cli
+```
+
+## 📖 Usage
+
+### Basic Commands
+
+```bash
+# Show help
+ccs --help
+
+# Show version
+ccs --version
+```
+
+### Provider Management
+
+```bash
+# List all providers
+ccs provider list
+
+# Add a new provider
+ccs provider add
+
+# Switch to a provider (by number, name, or ID)
+ccs provider switch 1
+ccs provider switch claude
+ccs provider switch bd065723
+
+# Remove a provider
+ccs provider remove 1
+
+# Show current provider
+ccs provider current
+```
+
+### Preset Management
+
+```bash
+# List available presets
+ccs preset list
+
+# Import a preset
+ccs preset import
+```
+
+### Configuration Management
+
+```bash
+# Show config directory
+ccs config dir
+
+# Export configuration
+ccs config export
+
+# Import configuration
+ccs config import
+
+# Reset configuration
+ccs config reset
+```
+
+### Session Management
+
+```bash
+# List sessions
+ccs session list
+
+# View session details
+ccs session view
+
+# Delete a session
+ccs session delete
+
+# Clear all sessions
+ccs session clear
+```
+
+### MCP Configuration
+
+```bash
+# List MCP configurations
+ccs mcp list
+
+# Add MCP configuration
+ccs mcp add
+
+# Remove MCP configuration
+ccs mcp remove
+```
+
+### Usage Statistics
+
+```bash
+# View usage statistics
+ccs usage stats
+
+# Show total cost
+ccs usage cost
+
+# Reset usage statistics
+ccs usage reset
+```
+
+## 📁 Configuration Files
+
+Configuration files are stored in `~/.cc-switch/`:
+
+- `data.json` - Main data file
+- `configs/` - AI tool configuration files
+- `backups/` - Configuration backups
+
+## 🔧 Development
+
+```bash
+# Clone the repository
+git clone https://github.com/your-username/ccs-cli.git
+cd ccs-cli
+
+# Install dependencies
 npm install
 
-# 构建项目
+# Build the project
 npm run build
 
-# 全局安装（可选）
-npm install -g .
-```
-
-## 使用方法
-
-### 基本命令
-
-```bash
-# 显示帮助
-cc-switch --help
-
-# 查看版本
-cc-switch --version
-```
-
-### 提供商管理
-
-```bash
-# 列出所有提供商
-cc-switch provider list
-
-# 添加提供商
-cc-switch provider add
-
-# 切换提供商
-cc-switch provider switch
-
-# 删除提供商
-cc-switch provider remove
-
-# 查看当前提供商
-cc-switch provider current
-```
-
-### 预设管理
-
-```bash
-# 列出所有预设
-cc-switch preset list
-
-# 导入预设
-cc-switch preset import
-```
-
-### 配置管理
-
-```bash
-# 查看配置目录
-cc-switch config dir
-
-# 导出配置
-cc-switch config export
-
-# 导入配置
-cc-switch config import
-
-# 重置配置
-cc-switch config reset
-```
-
-### 会话管理
-
-```bash
-# 列出会话
-cc-switch session list
-
-# 查看会话详情
-cc-switch session view
-
-# 删除会话
-cc-switch session delete
-
-# 清空所有会话
-cc-switch session clear
-```
-
-### MCP 配置管理
-
-```bash
-# 列出 MCP 配置
-cc-switch mcp list
-
-# 添加 MCP 配置
-cc-switch mcp add
-
-# 删除 MCP 配置
-cc-switch mcp remove
-```
-
-### 使用统计
-
-```bash
-# 查看使用统计
-cc-switch usage stats
-
-# 查看总成本
-cc-switch usage cost
-
-# 重置使用统计
-cc-switch usage reset
-```
-
-## 配置文件
-
-配置文件存储在 `~/.cc-switch/` 目录下：
-
-- `data.json` - 主数据文件
-- `configs/` - 各 AI 工具的配置文件
-- `backups/` - 配置备份
-
-## 技术栈
-
-- **Node.js**: 运行时环境
-- **TypeScript**: 类型安全的 JavaScript
-- **Commander**: 命令行参数解析
-- **Inquirer**: 交互式命令行提示
-- **Chalk**: 终端颜色输出
-- **Ora**: 加载动画
-
-## 开发
-
-```bash
-# 开发模式运行
+# Run in development mode
 npm run dev
 
-# 构建项目
-npm run build
-
-# 运行构建后的项目
-npm start
+# Test the CLI
+node dist/index.js --help
 ```
 
-## 与原版 CC Switch 的区别
+## 🤝 Contributing
 
-1. **命令行界面**: 原版是桌面应用，本项目是命令行工具
-2. **数据存储**: 使用 JSON 文件而非 SQLite（避免原生模块编译问题）
-3. **简化功能**: 聚焦核心功能，移除了部分高级特性
-4. **跨平台**: 基于 Node.js，支持所有主流操作系统
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-## 许可证
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-ISC
+## 📝 License
+
+ISC © [Your Name](https://github.com/your-username)
+
+## 🙏 Acknowledgments
+
+- Based on [farion1231/cc-switch](https://github.com/farion1231/cc-switch)
+- Built with [Commander.js](https://github.com/tj/commander.js)
+- Interactive prompts by [Inquirer.js](https://github.com/SBoudrias/Inquirer.js)

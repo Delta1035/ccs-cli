@@ -1,0 +1,28 @@
+# Source files
+src/
+tsconfig.json
+examples/
+PROJECT_SUMMARY.md
+
+# Git files
+.git/
+.gitignore
+
+# IDE files
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Node modules (should not be published)
+node_modules/
+
+# Temporary files
+*.tmp
+*.temp
