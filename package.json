@@ -1,6 +1,6 @@
 {
   "name": "@delta1035/ccs-cli",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "AI CLI Tool Manager - Switch between Claude, Codex, Gemini, and more",
   "main": "dist/index.js",
   "bin": {
