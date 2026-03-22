@@ -8,13 +8,14 @@ import { registerSessionCommands } from './commands/sessionCommands';
 import { registerMcpCommands } from './commands/mcpCommands';
 import { registerUsageCommands } from './commands/usageCommands';
 import { registerPresetCommands } from './commands/presetCommands';
+import packageJson from '../package.json';
 
 const program = new Command();
 
 program
   .name('ccs')
   .description('AI CLI Tool Manager - Switch between Claude, Codex, Gemini, and more')
-  .version('1.0.5')
+  .version(packageJson.version)
   .enablePositionalOptions()
   .exitOverride((err) => {
     // Only exit for errors, not for normal version/help output
