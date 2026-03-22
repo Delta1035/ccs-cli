@@ -14,7 +14,7 @@ const program = new Command();
 program
   .name('ccs')
   .description('AI CLI Tool Manager - Switch between Claude, Codex, Gemini, and more')
-  .version('1.0.4')
+  .version('1.0.5')
   .enablePositionalOptions()
   .exitOverride((err) => {
     // Only exit for errors, not for normal version/help output

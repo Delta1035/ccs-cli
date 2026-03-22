@@ -303,39 +303,51 @@ export class ProviderService {
       case 'claude':
         configFile = path.join(configDir, 'claude-config.json');
         configContent = JSON.stringify({
-          apiKey: provider.apiKey,
-          apiEndpoint: provider.baseUrl,
-          model: provider.models.claude,
-          temperature: 0.7,
-          maxTokens: 4096,
-          customHeaders: {}
+          env: {
+            ANTHROPIC_AUTH_TOKEN: provider.apiKey,
+            ANTHROPIC_BASE_URL: provider.baseUrl,
+            ANTHROPIC_DEFAULT_HAIKU_MODEL: provider.models.claude || '',
+            ANTHROPIC_DEFAULT_OPUS_MODEL: provider.models.claude || '',
+            ANTHROPIC_DEFAULT_SONNET_MODEL: provider.models.claude || '',
+            ANTHROPIC_MODEL: provider.models.claude || ''
+          },
+          includeCoAuthoredBy: false
         }, null, 2);
         break;
 
       case 'codex':
         configFile = path.join(configDir, 'codex-config.json');
         configContent = JSON.stringify({
-          apiKey: provider.apiKey,
-          apiEndpoint: provider.baseUrl,
-          model: provider.models.codex
+          env: {
+            OPENAI_API_KEY: provider.apiKey,
+            OPENAI_BASE_URL: provider.baseUrl,
+            OPENAI_MODEL: provider.models.codex || ''
+          },
+          includeCoAuthoredBy: false
         }, null, 2);
         break;
 
       case 'gemini':
         configFile = path.join(configDir, 'gemini-config.json');
         configContent = JSON.stringify({
-          apiKey: provider.apiKey,
-          apiEndpoint: provider.baseUrl,
-          model: provider.models.gemini
+          env: {
+            GEMINI_API_KEY: provider.apiKey,
+            GEMINI_BASE_URL: provider.baseUrl,
+            GEMINI_MODEL: provider.models.gemini || ''
+          },
+          includeCoAuthoredBy: false
         }, null, 2);
         break;
 
       default:
         configFile = path.join(configDir, `${provider.type}-config.json`);
         configContent = JSON.stringify({
-          apiKey: provider.apiKey,
-          apiEndpoint: provider.baseUrl,
-          models: provider.models
+          env: {
+            API_KEY: provider.apiKey,
+            BASE_URL: provider.baseUrl,
+            MODEL: provider.models.claude || provider.models.codex || provider.models.gemini || ''
+          },
+          includeCoAuthoredBy: false
         }, null, 2);
     }
 
