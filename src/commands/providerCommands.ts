@@ -29,8 +29,8 @@ export function registerProviderCommands(program: Command): void {
         const id = chalk.gray(`[${provider.id.substring(0, 8)}...]`);
         console.log(`  ${index + 1}. ${status} ${name} ${type} ${id}`);
       });
-      console.log(chalk.gray('\nUsage: cc-switch provider switch <number|name|id>'));
-      console.log(chalk.gray('Example: cc-switch provider switch 1 or cc-switch provider switch claude'));
+      console.log(chalk.gray('\nUsage: ccs provider switch <number|name|id>'));
+      console.log(chalk.gray('Example: ccs provider switch 1 or ccs provider switch claude'));
       console.log('');
     });
 
