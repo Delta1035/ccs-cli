@@ -102,7 +102,9 @@ ccs --help
 当需要发布新版本时：
 
 1. 修改代码
-2. 更新版本号 (`npm version patch/minor/major`)
+2. 更新版本号
+   - 使用脚本（推荐）: `./scripts/bump-version.sh patch/minor/major`
+   - 或手动: `npm version patch/minor/major`
 3. 提交更改
 4. 推送到 GitHub
 5. 发布到 NPM

@@ -119,6 +119,17 @@ npm version major
 
 ### 发布新版本
 
+#### 方法 1: 使用脚本（推荐）
+
+```bash
+# 使用自动化脚本
+./scripts/bump-version.sh patch  # patch 版本
+./scripts/bump-version.sh minor  # minor 版本
+./scripts/bump-version.sh major  # major 版本
+```
+
+#### 方法 2: 手动更新
+
 ```bash
 # 1. 更新版本
 npm version patch
