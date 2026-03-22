@@ -21,6 +21,24 @@ interface DataStore {
   usageStats: any[];
 }
 
+// Provider 数据接口
+interface DbProvider {
+  id: string;
+  name: string;
+  type: string;
+  baseUrl?: string;
+  apiKey?: string;
+  models?: any;
+  websiteUrl?: string;
+  icon?: string;
+  iconColor?: string;
+  config?: any;
+  enabled: boolean;
+  order: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
 // 默认数据
 const defaultData: DataStore = {
   providers: [],

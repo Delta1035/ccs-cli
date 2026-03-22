@@ -1,16 +1,47 @@
 // 类型定义文件
 
+/**
+ * 提供商类型
+ */
+export type ProviderType = 'claude' | 'codex' | 'gemini' | 'opencode' | 'openclaw';
+
+/**
+ * 模型配置
+ */
+export interface ModelConfig {
+  model?: string;
+  haikuModel?: string;
+  sonnetModel?: string;
+  opusModel?: string;
+  reasoningEffort?: string;
+}
+
+/**
+ * 提供商接口
+ */
 export interface Provider {
   id: string;
   name: string;
-  type: 'claude' | 'codex' | 'gemini' | 'opencode' | 'openclaw';
-  config: ProviderConfig;
-  enabled: boolean;
-  order: number;
+  type: ProviderType;
+  baseUrl: string;
+  apiKey: string;
+  models: {
+    claude?: string;
+    codex?: string;
+    gemini?: string;
+  };
+  websiteUrl?: string;
+  icon?: string;
+  iconColor?: string;
+  enabled?: boolean;
+  order?: number;
   createdAt: Date;
   updatedAt: Date;
 }
 
+/**
+ * 旧版 ProviderConfig 接口（向后兼容）
+ */
 export interface ProviderConfig {
   apiKey?: string;
   apiEndpoint?: string;

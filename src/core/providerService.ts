@@ -1,6 +1,26 @@
 import db from '../database/db';
-import { Provider, ProviderConfig } from '../types';
+import { Provider, ProviderConfig, ProviderType } from '../types';
 import { v4 as uuidv4 } from 'uuid';
+
+// 导出便捷函数
+export function saveProvider(provider: Provider): void {
+  const dbProvider = {
+    id: provider.id,
+    name: provider.name,
+    type: provider.type,
+    baseUrl: provider.baseUrl,
+    apiKey: provider.apiKey,
+    models: provider.models,
+    websiteUrl: provider.websiteUrl,
+    icon: provider.icon,
+    iconColor: provider.iconColor,
+    enabled: provider.enabled || false,
+    order: provider.order || 0,
+    createdAt: provider.createdAt,
+    updatedAt: provider.updatedAt
+  };
+  db.addProvider(dbProvider);
+}
 
 export class ProviderService {
   // 获取所有提供商
@@ -10,11 +30,16 @@ export class ProviderService {
       id: row.id,
       name: row.name,
       type: row.type,
-      config: row.config,
+      baseUrl: row.baseUrl || row.config?.apiEndpoint || '',
+      apiKey: row.apiKey || row.config?.apiKey || '',
+      models: row.models || { claude: row.config?.model, codex: row.config?.model, gemini: row.config?.model },
+      websiteUrl: row.websiteUrl,
+      icon: row.icon,
+      iconColor: row.iconColor,
       enabled: row.enabled,
       order: row.order,
-      createdAt: new Date(row.createdAt),
-      updatedAt: new Date(row.updatedAt)
+      createdAt: typeof row.createdAt === 'number' ? new Date(row.createdAt) : new Date(row.createdAt),
+      updatedAt: typeof row.updatedAt === 'number' ? new Date(row.updatedAt) : new Date(row.updatedAt)
     }));
   }
 
@@ -27,11 +52,16 @@ export class ProviderService {
       id: provider.id,
       name: provider.name,
       type: provider.type,
-      config: provider.config,
+      baseUrl: provider.baseUrl || provider.config?.apiEndpoint || '',
+      apiKey: provider.apiKey || provider.config?.apiKey || '',
+      models: provider.models || { claude: provider.config?.model, codex: provider.config?.model, gemini: provider.config?.model },
+      websiteUrl: provider.websiteUrl,
+      icon: provider.icon,
+      iconColor: provider.iconColor,
       enabled: provider.enabled,
       order: provider.order,
-      createdAt: new Date(provider.createdAt),
-      updatedAt: new Date(provider.updatedAt)
+      createdAt: typeof provider.createdAt === 'number' ? new Date(provider.createdAt) : new Date(provider.createdAt),
+      updatedAt: typeof provider.updatedAt === 'number' ? new Date(provider.updatedAt) : new Date(provider.updatedAt)
     };
   }
 
@@ -39,6 +69,7 @@ export class ProviderService {
   static addProvider(name: string, type: Provider['type'], config: ProviderConfig): Provider {
     const id = uuidv4();
     const order = this.getNextOrder();
+    const now = new Date();
 
     const provider = {
       id,
@@ -47,8 +78,8 @@ export class ProviderService {
       config,
       enabled: false,
       order,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+      createdAt: now.getTime(),
+      updatedAt: now.getTime()
     };
 
     db.addProvider(provider);
@@ -57,12 +88,34 @@ export class ProviderService {
       id,
       name,
       type,
-      config,
+      baseUrl: config.apiEndpoint || '',
+      apiKey: config.apiKey || '',
+      models: { claude: config.model, codex: config.model, gemini: config.model },
       enabled: false,
       order,
-      createdAt: new Date(),
-      updatedAt: new Date()
+      createdAt: now,
+      updatedAt: now
     };
+  }
+
+  // 从预设添加提供商
+  static addProviderFromPreset(provider: Provider): void {
+    const dbProvider = {
+      id: provider.id,
+      name: provider.name,
+      type: provider.type,
+      baseUrl: provider.baseUrl,
+      apiKey: provider.apiKey,
+      models: provider.models,
+      websiteUrl: provider.websiteUrl,
+      icon: provider.icon,
+      iconColor: provider.iconColor,
+      enabled: provider.enabled || false,
+      order: provider.order || this.getNextOrder(),
+      createdAt: provider.createdAt.getTime(),
+      updatedAt: provider.updatedAt.getTime()
+    };
+    db.addProvider(dbProvider);
   }
 
   // 更新提供商
@@ -75,8 +128,8 @@ export class ProviderService {
     const updated = { ...existing, ...updates, updatedAt: new Date() };
     db.updateProvider(id, {
       ...updated,
-      createdAt: updated.createdAt.toISOString(),
-      updatedAt: updated.updatedAt.toISOString()
+      createdAt: updated.createdAt.getTime(),
+      updatedAt: updated.updatedAt.getTime()
     });
 
     return updated;
@@ -92,11 +145,11 @@ export class ProviderService {
     // 先禁用所有提供商
     const providers = db.getProviders();
     providers.forEach(p => {
-      db.updateProvider(p.id, { enabled: false, updatedAt: new Date().toISOString() });
+      db.updateProvider(p.id, { enabled: false, updatedAt: new Date().getTime() });
     });
 
     // 启用指定的提供商
-    db.updateProvider(id, { enabled: true, updatedAt: new Date().toISOString() });
+    db.updateProvider(id, { enabled: true, updatedAt: new Date().getTime() });
 
     // 返回启用的提供商
     const provider = this.getProviderById(id);
@@ -118,11 +171,16 @@ export class ProviderService {
       id: provider.id,
       name: provider.name,
       type: provider.type,
-      config: provider.config,
+      baseUrl: provider.baseUrl || provider.config?.apiEndpoint || '',
+      apiKey: provider.apiKey || provider.config?.apiKey || '',
+      models: provider.models || { claude: provider.config?.model, codex: provider.config?.model, gemini: provider.config?.model },
+      websiteUrl: provider.websiteUrl,
+      icon: provider.icon,
+      iconColor: provider.iconColor,
       enabled: provider.enabled,
       order: provider.order,
-      createdAt: new Date(provider.createdAt),
-      updatedAt: new Date(provider.updatedAt)
+      createdAt: typeof provider.createdAt === 'number' ? new Date(provider.createdAt) : new Date(provider.createdAt),
+      updatedAt: typeof provider.updatedAt === 'number' ? new Date(provider.updatedAt) : new Date(provider.updatedAt)
     };
   }
 
@@ -154,36 +212,40 @@ export class ProviderService {
       case 'claude':
         configFile = path.join(configDir, 'claude-config.json');
         configContent = JSON.stringify({
-          apiKey: provider.config.apiKey,
-          apiEndpoint: provider.config.apiEndpoint,
-          model: provider.config.model,
-          temperature: provider.config.temperature,
-          maxTokens: provider.config.maxTokens,
-          customHeaders: provider.config.customHeaders
+          apiKey: provider.apiKey,
+          apiEndpoint: provider.baseUrl,
+          model: provider.models.claude,
+          temperature: 0.7,
+          maxTokens: 4096,
+          customHeaders: {}
         }, null, 2);
         break;
 
       case 'codex':
         configFile = path.join(configDir, 'codex-config.json');
         configContent = JSON.stringify({
-          apiKey: provider.config.apiKey,
-          apiEndpoint: provider.config.apiEndpoint,
-          model: provider.config.model
+          apiKey: provider.apiKey,
+          apiEndpoint: provider.baseUrl,
+          model: provider.models.codex
         }, null, 2);
         break;
 
       case 'gemini':
         configFile = path.join(configDir, 'gemini-config.json');
         configContent = JSON.stringify({
-          apiKey: provider.config.apiKey,
-          apiEndpoint: provider.config.apiEndpoint,
-          model: provider.config.model
+          apiKey: provider.apiKey,
+          apiEndpoint: provider.baseUrl,
+          model: provider.models.gemini
         }, null, 2);
         break;
 
       default:
         configFile = path.join(configDir, `${provider.type}-config.json`);
-        configContent = JSON.stringify(provider.config, null, 2);
+        configContent = JSON.stringify({
+          apiKey: provider.apiKey,
+          apiEndpoint: provider.baseUrl,
+          models: provider.models
+        }, null, 2);
     }
 
     // 原子写入配置文件

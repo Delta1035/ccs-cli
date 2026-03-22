@@ -14,7 +14,7 @@ const program = new Command();
 program
   .name('ccs')
   .description('AI CLI Tool Manager - Switch between Claude, Codex, Gemini, and more')
-  .version('1.0.0');
+  .version('1.0.1');
 
 // 注册所有命令
 registerProviderCommands(program);

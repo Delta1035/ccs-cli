@@ -3,7 +3,8 @@ import inquirer from 'inquirer';
 import ora from 'ora';
 import chalk from 'chalk';
 import { ProviderService } from '../core/providerService';
-import { Provider, ProviderConfig } from '../types';
+import { Provider, ProviderConfig, ProviderType } from '../types';
+import { providerPresets, createProviderFromPreset } from '../config/providerPresets';
 
 export function registerProviderCommands(program: Command): void {
   const providerCmd = program
@@ -41,53 +42,122 @@ export function registerProviderCommands(program: Command): void {
     .action(async () => {
       const answers = await inquirer.prompt([
         {
-          type: 'input',
-          name: 'name',
-          message: 'Provider name:',
-          validate: (input) => input.length > 0 ? true : 'Name is required'
-        },
-        {
           type: 'list',
-          name: 'type',
-          message: 'Provider type:',
+          name: 'usePreset',
+          message: 'Use a preset or create custom?',
           choices: [
-            { name: 'Claude Code', value: 'claude' },
-            { name: 'Codex', value: 'codex' },
-            { name: 'Gemini CLI', value: 'gemini' },
-            { name: 'OpenCode', value: 'opencode' },
-            { name: 'OpenClaw', value: 'openclaw' }
+            { name: 'Use preset (recommended)', value: true },
+            { name: 'Create custom', value: false }
           ]
-        },
-        {
-          type: 'input',
-          name: 'apiKey',
-          message: 'API Key (optional):'
-        },
-        {
-          type: 'input',
-          name: 'apiEndpoint',
-          message: 'API Endpoint (optional):'
-        },
-        {
-          type: 'input',
-          name: 'model',
-          message: 'Model (optional):'
         }
       ]);
 
-      const config: ProviderConfig = {
-        apiKey: answers.apiKey || undefined,
-        apiEndpoint: answers.apiEndpoint || undefined,
-        model: answers.model || undefined
-      };
+      if (answers.usePreset) {
+        // 从预设创建
+        const presetAnswers = await inquirer.prompt([
+          {
+            type: 'list',
+            name: 'preset',
+            message: 'Select preset:',
+            choices: providerPresets.map(p => ({
+              name: `${p.name} (${p.providerType}) - ${p.description || ''}`,
+              value: p.name
+            }))
+          }
+        ]);
 
-      const spinner = ora('Adding provider...').start();
-      try {
-        const provider = ProviderService.addProvider(answers.name, answers.type, config);
-        spinner.succeed(`Provider "${provider.name}" added successfully`);
-        console.log(chalk.gray(`  ID: ${provider.id}`));
-      } catch (error) {
-        spinner.fail(`Failed to add provider: ${error}`);
+        const preset = providerPresets.find(p => p.name === presetAnswers.preset);
+        if (!preset) {
+          console.log(chalk.red('Preset not found'));
+          return;
+        }
+
+        const questions = [];
+        if (preset.requiresApiKey) {
+          questions.push({
+            type: 'input',
+            name: 'apiKey',
+            message: `${preset.apiKeyName || 'API Key'}:`,
+            validate: (input: string) => input.length > 0 || 'API Key is required'
+          });
+        }
+
+        questions.push({
+          type: 'input',
+          name: 'customName',
+          message: 'Custom name (optional):',
+          default: preset.name
+        });
+
+        const presetAnswers2 = await inquirer.prompt(questions);
+
+        const spinner = ora('Creating provider...').start();
+        try {
+          const provider = createProviderFromPreset(
+            preset,
+            Date.now().toString(),
+            presetAnswers2.apiKey || '',
+            presetAnswers2.customName
+          );
+
+          ProviderService.addProviderFromPreset(provider);
+          spinner.succeed(`Provider "${provider.name}" created successfully`);
+          console.log(chalk.gray(`  ID: ${provider.id}`));
+        } catch (error) {
+          spinner.fail(`Failed to create provider: ${error}`);
+        }
+      } else {
+        // 自定义创建
+        const customAnswers = await inquirer.prompt([
+          {
+            type: 'input',
+            name: 'name',
+            message: 'Provider name:',
+            validate: (input) => input.length > 0 ? true : 'Name is required'
+          },
+          {
+            type: 'list',
+            name: 'type',
+            message: 'Provider type:',
+            choices: [
+              { name: 'Claude Code', value: 'claude' },
+              { name: 'Codex', value: 'codex' },
+              { name: 'Gemini CLI', value: 'gemini' },
+              { name: 'OpenCode', value: 'opencode' },
+              { name: 'OpenClaw', value: 'openclaw' }
+            ]
+          },
+          {
+            type: 'input',
+            name: 'apiKey',
+            message: 'API Key (optional):'
+          },
+          {
+            type: 'input',
+            name: 'apiEndpoint',
+            message: 'API Endpoint (optional):'
+          },
+          {
+            type: 'input',
+            name: 'model',
+            message: 'Model (optional):'
+          }
+        ]);
+
+        const config: ProviderConfig = {
+          apiKey: customAnswers.apiKey || undefined,
+          apiEndpoint: customAnswers.apiEndpoint || undefined,
+          model: customAnswers.model || undefined
+        };
+
+        const spinner = ora('Adding provider...').start();
+        try {
+          const provider = ProviderService.addProvider(customAnswers.name, customAnswers.type, config);
+          spinner.succeed(`Provider "${provider.name}" added successfully`);
+          console.log(chalk.gray(`  ID: ${provider.id}`));
+        } catch (error) {
+          spinner.fail(`Failed to add provider: ${error}`);
+        }
       }
     });
 
@@ -153,7 +223,7 @@ export function registerProviderCommands(program: Command): void {
         const provider = ProviderService.switchProvider(providerId!);
         spinner.succeed(`Switched to provider: ${chalk.cyan(provider.name)}`);
         console.log(chalk.gray(`  Type: ${provider.type}`));
-        console.log(chalk.gray(`  API Endpoint: ${provider.config.apiEndpoint || 'default'}`));
+        console.log(chalk.gray(`  API Endpoint: ${provider.baseUrl || 'default'}`));
       } catch (error) {
         spinner.fail(`Failed to switch provider: ${error}`);
       }
@@ -251,9 +321,10 @@ export function registerProviderCommands(program: Command): void {
       console.log(chalk.bold('\n🎯 Current Provider:\n'));
       console.log(chalk.cyan(`  Name: ${provider.name}`));
       console.log(chalk.gray(`  Type: ${provider.type}`));
-      console.log(chalk.gray(`  API Endpoint: ${provider.config.apiEndpoint || 'default'}`));
-      if (provider.config.model) {
-        console.log(chalk.gray(`  Model: ${provider.config.model}`));
+      console.log(chalk.gray(`  API Endpoint: ${provider.baseUrl || 'default'}`));
+      const model = provider.models.claude || provider.models.codex || provider.models.gemini;
+      if (model) {
+        console.log(chalk.gray(`  Model: ${model}`));
       }
       console.log('');
     });
