@@ -112,7 +112,7 @@ async function main() {
 //   console.log('');
 //   console.log('查看包页面:');
 //   console.log('   https://www.npmjs.com/package/%s', pkg.name);
-// }
+}
 
 main().catch((err) => {
   console.error('错误:', err);
