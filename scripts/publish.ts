@@ -80,17 +80,17 @@ async function main() {
   console.log('✅ Git 工作区干净\n');
 
   // 3. 运行构建
-  console.log('3. 运行构建...');
-  runCommand('pnpm run build');
-  console.log('✅ 构建成功\n');
+  // console.log('3. 运行构建...');
+  // runCommand('pnpm run build');
+  // console.log('✅ 构建成功\n');
 
-  // 4. 显示包信息
-  const pkg = getPackageInfo();
-  console.log('4. 包信息预览:');
-  console.log('   名称: %s', pkg.name);
-  console.log('   版本: %s', pkg.version);
-  console.log('   描述: %s', pkg.description || 'N/A');
-  console.log('');
+  // // 4. 显示包信息
+  // const pkg = getPackageInfo();
+  // console.log('4. 包信息预览:');
+  // console.log('   名称: %s', pkg.name);
+  // console.log('   版本: %s', pkg.version);
+  // console.log('   描述: %s', pkg.description || 'N/A');
+  // console.log('');
 
   // 5. 确认发布
   // const confirm = await askConfirm('确认发布到 NPM?');
