@@ -93,12 +93,12 @@ async function main() {
   console.log('');
 
   // 5. 确认发布
-  const confirm = await askConfirm('确认发布到 NPM?');
+  // const confirm = await askConfirm('确认发布到 NPM?');
 
-  if (!confirm) {
-    console.log('❌ 发布已取消');
-    process.exit(1);
-  }
+  // if (!confirm) {
+  //   console.log('❌ 发布已取消');
+  //   process.exit(1);
+  // }
 
 //   // 6. 发布到 NPM
 //   console.log('5. 发布到 NPM...');
