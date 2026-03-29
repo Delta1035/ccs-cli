@@ -73,13 +73,13 @@ async function main() {
 
   // 4. 更新版本号
   console.log('2. 更新版本号...');
-  runCommand(`npm version ${versionType}`);
+  runCommand(`pnpm version ${versionType}`);
   const newVersion = getCurrentVersion();
   console.log('✅ 版本已更新: %s → %s\n', currentVersion, newVersion);
 
   // 5. 构建项目
   console.log('3. 构建项目...');
-  runCommand('npm run build');
+  runCommand('pnpm run build');
   console.log('✅ 构建成功\n');
 
   // 6. 推送到 GitHub

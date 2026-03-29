@@ -28,7 +28,7 @@ function runCommand(cmd: string): string {
 
 function checkNpmLogin(): boolean {
   try {
-    runCommand('npm whoami');
+    runCommand('pnpm whoami');
     return true;
   } catch {
     return false;
@@ -51,10 +51,10 @@ async function main() {
   console.log('1. 检查 NPM 登录状态...');
   if (!checkNpmLogin()) {
     console.error('❌ 未登录 NPM，请先登录:');
-    console.error('   npm login');
+    console.error('   pnpm login');
     process.exit(1);
   }
-  console.log('✅ 已登录 NPM: %s\n', runCommand('npm whoami'));
+  console.log('✅ 已登录 NPM: %s\n', runCommand('pnpm whoami'));
 
   // 2. 检查 Git 状态
   console.log('2. 检查 Git 状态...');
@@ -67,7 +67,7 @@ async function main() {
 
   // 3. 运行构建
   console.log('3. 运行构建...');
-  runCommand('npm run build');
+  runCommand('pnpm run build');
   console.log('✅ 构建成功\n');
 
   // 4. 显示包信息
@@ -95,13 +95,13 @@ async function main() {
 
   // 6. 发布到 NPM
   console.log('5. 发布到 NPM...');
-  runCommand('npm publish --access public');
+  runCommand('pnpm publish --access public');
 
   console.log('');
   console.log('✅ 发布成功!');
   console.log('');
   console.log('安装命令:');
-  console.log('   npm install -g %s', pkg.name);
+  console.log('   pnpm add -g %s', pkg.name);
   console.log('');
   console.log('查看包页面:');
   console.log('   https://www.npmjs.com/package/%s', pkg.name);
