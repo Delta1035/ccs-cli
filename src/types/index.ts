@@ -30,6 +30,8 @@ export interface Provider {
     codex?: string;
     gemini?: string;
   };
+  /** 额外配置项，如 API_TIMEOUT_MS, CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC 等 */
+  extraConfig?: Record<string, string>;
   websiteUrl?: string;
   icon?: string;
   iconColor?: string;

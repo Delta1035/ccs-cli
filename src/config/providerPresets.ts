@@ -22,6 +22,8 @@ export interface ProviderPreset {
     codex?: string;
     gemini?: string;
   };
+  /** 额外配置项，如 API_TIMEOUT_MS, CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC 等 */
+  extraConfig?: Record<string, string>;
   /** 网站链接 */
   websiteUrl?: string;
   /** 图标名称 */
@@ -316,15 +318,15 @@ export const providerPresets: ProviderPreset[] = [
     apiKeyName: "ZhiPu API Key",
   },
   {
-    name: "Moonshot",
+    name: "Kimi",
     providerType: "claude",
-    defaultBaseUrl: "https://api.moonshot.cn/v1",
+    defaultBaseUrl: "https://api.moonshot.cn/anthropic",
     defaultModels: {
-      claude: "moonshot-v1-128k",
+      claude: "kimi-k2.5",
     },
-    websiteUrl: "https://moonshot.ai",
-    icon: "moonshot",
-    iconColor: "#1A1A2E",
+    websiteUrl: "https://platform.moonshot.cn/console",
+    icon: "kimi",
+    iconColor: "#6366F1",
     description: "月之暗面 Kimi",
     requiresApiKey: true,
     apiKeyName: "Moonshot API Key",
@@ -332,14 +334,36 @@ export const providerPresets: ProviderPreset[] = [
   {
     name: "MiniMax",
     providerType: "claude",
-    defaultBaseUrl: "https://api.minimax.chat/v1",
+    defaultBaseUrl: "https://api.minimaxi.com/anthropic",
     defaultModels: {
       claude: "MiniMax-M2.7",
     },
-    websiteUrl: "https://minimaxi.com",
+    extraConfig: {
+      API_TIMEOUT_MS: "3000000",
+      CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC: "1",
+    },
+    websiteUrl: "https://platform.minimaxi.com",
     icon: "minimax",
-    iconColor: "#00D4AA",
-    description: "MiniMax 大模型",
+    iconColor: "#FF6B6B",
+    description: "MiniMax 大模型 (中国)",
+    requiresApiKey: true,
+    apiKeyName: "MiniMax API Key",
+  },
+  {
+    name: "MiniMax en",
+    providerType: "claude",
+    defaultBaseUrl: "https://api.minimax.io/anthropic",
+    defaultModels: {
+      claude: "MiniMax-M2.7",
+    },
+    extraConfig: {
+      API_TIMEOUT_MS: "3000000",
+      CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC: "1",
+    },
+    websiteUrl: "https://platform.minimax.io",
+    icon: "minimax",
+    iconColor: "#FF6B6B",
+    description: "MiniMax 大模型 (国际)",
     requiresApiKey: true,
     apiKeyName: "MiniMax API Key",
   },
@@ -573,6 +597,7 @@ export function createProviderFromPreset(
     baseUrl: customBaseUrl || preset.defaultBaseUrl,
     apiKey: apiKey,
     models: { ...preset.defaultModels },
+    extraConfig: preset.extraConfig ? { ...preset.extraConfig } : undefined,
     websiteUrl: preset.websiteUrl,
     icon: preset.icon,
     iconColor: preset.iconColor,

@@ -299,6 +299,9 @@ export class ProviderService {
     let configFile: string;
     let configContent: string;
 
+    // 合并额外配置到环境变量
+    const extraEnv = provider.extraConfig || {};
+
     switch (provider.type) {
       case 'claude':
         configFile = path.join(configDir, 'claude-config.json');
@@ -309,7 +312,8 @@ export class ProviderService {
             ANTHROPIC_DEFAULT_HAIKU_MODEL: provider.models.claude || '',
             ANTHROPIC_DEFAULT_OPUS_MODEL: provider.models.claude || '',
             ANTHROPIC_DEFAULT_SONNET_MODEL: provider.models.claude || '',
-            ANTHROPIC_MODEL: provider.models.claude || ''
+            ANTHROPIC_MODEL: provider.models.claude || '',
+            ...extraEnv
           },
           includeCoAuthoredBy: false
         }, null, 2);
@@ -321,7 +325,8 @@ export class ProviderService {
           env: {
             OPENAI_API_KEY: provider.apiKey,
             OPENAI_BASE_URL: provider.baseUrl,
-            OPENAI_MODEL: provider.models.codex || ''
+            OPENAI_MODEL: provider.models.codex || '',
+            ...extraEnv
           },
           includeCoAuthoredBy: false
         }, null, 2);
@@ -333,7 +338,8 @@ export class ProviderService {
           env: {
             GEMINI_API_KEY: provider.apiKey,
             GEMINI_BASE_URL: provider.baseUrl,
-            GEMINI_MODEL: provider.models.gemini || ''
+            GEMINI_MODEL: provider.models.gemini || '',
+            ...extraEnv
           },
           includeCoAuthoredBy: false
         }, null, 2);
@@ -345,7 +351,8 @@ export class ProviderService {
           env: {
             API_KEY: provider.apiKey,
             BASE_URL: provider.baseUrl,
-            MODEL: provider.models.claude || provider.models.codex || provider.models.gemini || ''
+            MODEL: provider.models.claude || provider.models.codex || provider.models.gemini || '',
+            ...extraEnv
           },
           includeCoAuthoredBy: false
         }, null, 2);
@@ -390,6 +397,10 @@ export class ProviderService {
       claudeSettings.env.ANTHROPIC_DEFAULT_OPUS_MODEL = provider.models.claude || '';
       claudeSettings.env.ANTHROPIC_DEFAULT_SONNET_MODEL = provider.models.claude || '';
       claudeSettings.env.ANTHROPIC_MODEL = provider.models.claude || '';
+      // 合并额外配置
+      if (provider.extraConfig) {
+        Object.assign(claudeSettings.env, provider.extraConfig);
+      }
       claudeSettings.includeCoAuthoredBy = claudeSettings.includeCoAuthoredBy || false;
 
       // 原子写入配置文件
