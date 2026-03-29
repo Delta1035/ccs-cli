@@ -100,19 +100,19 @@ async function main() {
     process.exit(1);
   }
 
-  // 6. 发布到 NPM
-  console.log('5. 发布到 NPM...');
-  runCommand('pnpm publish --access public');
+//   // 6. 发布到 NPM
+//   console.log('5. 发布到 NPM...');
+//   runCommand('pnpm publish --access public');
 
-  console.log('');
-  console.log('✅ 发布成功!');
-  console.log('');
-  console.log('安装命令:');
-  console.log('   pnpm add -g %s', pkg.name);
-  console.log('');
-  console.log('查看包页面:');
-  console.log('   https://www.npmjs.com/package/%s', pkg.name);
-}
+//   console.log('');
+//   console.log('✅ 发布成功!');
+//   console.log('');
+//   console.log('安装命令:');
+//   console.log('   pnpm add -g %s', pkg.name);
+//   console.log('');
+//   console.log('查看包页面:');
+//   console.log('   https://www.npmjs.com/package/%s', pkg.name);
+// }
 
 main().catch((err) => {
   console.error('错误:', err);
