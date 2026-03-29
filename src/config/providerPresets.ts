@@ -334,7 +334,7 @@ export const providerPresets: ProviderPreset[] = [
     providerType: "claude",
     defaultBaseUrl: "https://api.minimax.chat/v1",
     defaultModels: {
-      claude: "abab6.5s-chat",
+      claude: "MiniMax-M2.7",
     },
     websiteUrl: "https://minimaxi.com",
     icon: "minimax",
