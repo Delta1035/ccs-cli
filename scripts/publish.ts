@@ -10,7 +10,7 @@
 
 import { execSync } from 'child_process';
 import { readFileSync } from 'fs';
-import inquirer from 'inquirer';
+import * as readline from 'readline';
 
 interface PackageJson {
   name: string;
@@ -42,6 +42,20 @@ function checkGitStatus(): boolean {
   } catch {
     return false;
   }
+}
+
+function askConfirm(question: string): Promise<boolean> {
+  return new Promise((resolve) => {
+    const rl = readline.createInterface({
+      input: process.stdin,
+      output: process.stdout,
+    });
+
+    rl.question(question + ' (y/N): ', (answer) => {
+      rl.close();
+      resolve(answer.toLowerCase() === 'y');
+    });
+  });
 }
 
 async function main() {
@@ -79,14 +93,7 @@ async function main() {
   console.log('');
 
   // 5. 确认发布
-  const { confirm } = await inquirer.prompt<{ confirm: boolean }>([
-    {
-      type: 'confirm',
-      name: 'confirm',
-      message: '确认发布到 NPM?',
-      default: false,
-    },
-  ]);
+  const confirm = await askConfirm('确认发布到 NPM?');
 
   if (!confirm) {
     console.log('❌ 发布已取消');
