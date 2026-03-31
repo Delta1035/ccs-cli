@@ -320,7 +320,7 @@ export const providerPresets: ProviderPreset[] = [
   {
     name: "Kimi",
     providerType: "claude",
-    defaultBaseUrl: "https://api.moonshot.cn/anthropic",
+    defaultBaseUrl: "https://api.kimi.com/coding/",
     defaultModels: {
       claude: "kimi-for-coding",
     },
